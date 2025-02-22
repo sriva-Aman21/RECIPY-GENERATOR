@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe App with Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        body {
+            background-image: url('loginback.jpg');
+            background-size: cover;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            background-color: rgb(243, 240, 240);
+            padding: 30px;
+            max-width: 400px;
+            margin: 100px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color:#efeaf1;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color:#040006;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #0f0101;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Recipe Page Styles */
+        #recipe-section {
+            display: none;
+        }
+
+        header nav {
+            background-color: #212121;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header nav h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        header nav form {
+            display: flex;
+        }
+
+        form input[type="text"] {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        form button[type="submit"] {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form button[type="submit"]:hover {
+            background-color: #ff5c5c;
+        }
+
+        .recipe-container {
+            text-align: center;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 40px;
+            padding: 20px;
+            place-items: center;
+        }
+
+        .recipe {
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            color: #000;
+            border-radius: 6px;
+            box-shadow: 0 5px 10px rgba(78, 73, 73, 0.1), -5px -5px 10px rgba(34, 34, 34, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .recipe:hover {
+            transform: scale(1.02);
+        }
+
+        .recipe img {
+            height: 300px;
+        }
+
+        .recipe h3 {
+            font-size: 24px;
+            margin-block: 5px;
+        }
+
+        .recipe p {
+            font-size: 20px;
+            color: #4a4a4a;
+            margin: 5px 0;
+        }
+
+        .recipe button {
+            font-size: 20px;
+            font-weight: 600;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin: 18px auto;
+            background-color: #f44336;
+            color: #fff;
+        }
+
+        /* Recipe details popup */
+        .recipe-details {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #694c2f;
+            border-radius: 12px;
+            width: 40%;
+            height: 60%;
+            font-size: 20px;
+            transition: all 0.5s ease-in-out;
+            overflow: scroll;
+        }
+
+        .recipe-details-content {
+            padding: 30px;
+        }
+
+        .recipe-close-btn {
+            border: none;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #f44336;
+            color: #fff;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            height: 30px;
+            width: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Form Section -->
+    <div id="login-section">
+        <div class="login-container">
+            <form class="login-form">
+                <h1>Login</h1>
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recipe App Section -->
+    <div id="recipe-section">
+        <header>
+            <nav>
+                <h1>ONE INGREDIENT, ENDLESS POSSIBILITIES RECIPE GENERATOR</h1>
+                <form>
+                    <input type="text" placeholder="Search for Recipes...." class="searchBox"/>
+                    <button type="submit" class="searchBtn">Search</button>
+                </form>
+            </nav>
+        </header>
+        <main>
+            <section>
+                <div class="recipe-container">
+                    <h2>Search your favourite recipes...</h2>
+                </div>
+                <div class="recipe-details">
+                    <button type="button" class="recipe-close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="recipe-details-content"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const loginForm = document.querySelector('.login-form');
+        const loginSection = document.getElementById('login-section');
+        const recipeSection = document.getElementById('recipe-section');
+        const searchBox = document.querySelector('.searchBox');
+        const searchBtn = document.querySelector('.searchBtn');
+        const recipeContainer = document.querySelector('.recipe-container');
+        const recipeDetailsContent = document.querySelector('.recipe-details-content');
+        const recipeCloseBtn = document.querySelector('.recipe-close-btn');
+
+        // Show recipe section after successful login
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get the form data
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Basic validation (you can add authentication logic here)
+            if (username === '' || password === '') {
+                alert('Please fill in both fields.');
+            } else {
+                // Hide the login section and show the recipe section
+                loginSection.style.display = 'none';
+                recipeSection.style.display = 'block';
+                alert('Login successful');
+            }
+        });
+
+        // Fetch recipes
+        const fetchRecipes = async (query) => {
+            recipeContainer.innerHTML = "<h2>Fetching Recipes....</h2>";
+            
+            const data = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
+            const response = await data.json();
+
+            recipeContainer.innerHTML = "";
+            if (response.meals) {
+                response.meals.forEach(meal => {
+                    const recipeDiv = document.createElement('div');
+                    recipeDiv.classList.add('recipe');
+                    recipeDiv.innerHTML = `
+                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
+                        <h3>${meal.strMeal}</h3>
+                        <p><span>${meal.strArea}</span> Dish</p>
+                        <p>Belongs To <span>${meal.strCategory}</span> Category</p>
+                    `;
+
+                    const button = document.createElement('button');
+                    button.textContent = "View Recipe";
+                    recipeDiv.appendChild(button);
+
+                    // Adding event listener to recipe button
+                    button.addEventListener('click', () => {
+                        openRecipePopup(meal);
+                    });
+
+                    recipeContainer.appendChild(recipeDiv);
+                });
+            } else {
+                recipeContainer.innerHTML = "<p>No recipes found</p>";
+            }
+        };
+
+        const fetchIngredients = (meal) => {
+            let ingredientsList = "";
+            for (let i = 1; i <= 20; i++) {
+                const ingredient = meal[`strIngredient${i}`];
+                if (ingredient) {
+                    const measure = meal[`strMeasure${i}`];
+                    ingredientsList += `<li>${measure} ${ingredient}</li>`;
+                } else {
+                    break;
+                }
+            }
+
+            return ingredientsList;
+        };
+
+        const openRecipePopup = (meal) => {
+            recipeDetailsContent.innerHTML = `
+                <h2 class="recipeName">${meal.strMeal}</h2>
+                <h3>Ingredients:</h3>
+                <ul class="ingredientList">${fetchIngredients(meal)}</ul>
+                <div class="recipeInstructions">
+                    <h3>Instructions:</h3>
+                    <p>${meal.strInstructions}</p>
+                </div>
+            `;
+            recipeDetailsContent.parentElement.style.display = 'block';
+        };
+
+        recipeCloseBtn.addEventListener('click', () => {
+            recipeDetailsContent.parentElement.style.display = "none";
+        });
+
+        searchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const searchInput = searchBox.value.trim();
+            if (!searchInput) {
+                recipeContainer.innerHTML = `<h2>TYPE THE MEAL IN SEARCH BOX.</h2>`;
+                return;
+            }
+            fetchRecipes(searchInput);
+        });
+    </script>
+
+</body>
+</html>
